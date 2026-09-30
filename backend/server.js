@@ -10,91 +10,106 @@ app.get('/', (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
-}); 
+});
 
 
 app.get('/candidates', async (req, res) => {
-    try {
-        const pool = await poolPromise;
+  try {
+    const pool = await poolPromise;
 
-        const result = await pool.request().query(
-            'SELECT * FROM Candidates'
-        );
+    const result = await pool.request().query(
+      'SELECT * FROM Candidates'
+    );
 
-        res.json(result.recordset);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({
-            error: 'Erro ao buscar candidatos'
-        });
-    }
+    res.json(result.recordset);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: 'Erro ao buscar candidatos'
+    });
+  }
 });
 
 app.post('/candidates', async (req, res) => {
-    try {
-        const {
-            fullName,
-            email,
-            phone,
-            desiredPosition,
-            professionalSummary
-        } = req.body;
+  try {
+    const {
+      fullName,
+      email,
+      phone,
+      desiredPosition,
+      professionalSummary
+    } = req.body;
 
-        const pool = await poolPromise;
-
-        await pool.request()
-            .input('fullName', fullName)
-            .input('email', email)
-            .input('phone', phone)
-            .input('desiredPosition', desiredPosition)
-            .input('professionalSummary', professionalSummary)
-            .query(`
+    if (!fullName) {
+      return res.status(400).json({
+        error: 'o campo fullName é obrigatório'
+      });
+    }
+    if (!email) {
+      return res.status(400).json({
+        error: 'o campo email é obrigatório'
+      })
+    }
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailValido) {
+      return res.status(400).json({
+        error: 'o e-mail informado é inválido'
+      });
+    }
+    const pool = await poolPromise;
+    await pool.request()
+      .input('fullName', fullName)
+      .input('email', email)
+      .input('phone', phone)
+      .input('desiredPosition', desiredPosition)
+      .input('professionalSummary', professionalSummary)
+      .query(`
                 INSERT INTO Candidates
                 (FullName, Email, Phone, DesiredPosition, ProfessionalSummary, CreatedAt)
                 VALUES
                 (@fullName, @email, @phone, @desiredPosition, @professionalSummary, GETDATE())
             `);
 
-        res.status(201).json({
-            message: 'Candidato cadastrado com sucesso'
-        });
+    res.status(201).json({
+      message: 'Candidato cadastrado com sucesso'
+    });
 
-    } catch (error) {
-        console.error(error);
+  } catch (error) {
+    console.error(error);
 
-        res.status(500).json({
-            error: 'Erro ao cadastrar candidato'
-        });
-    }
+    res.status(500).json({
+      error: 'Erro ao cadastrar candidato'
+    });
+  }
 });
 
 app.get('/candidates/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
+  try {
+    const { id } = req.params;
 
-        const pool = await poolPromise;
+    const pool = await poolPromise;
 
-        const result = await pool.request()
-            .input('id', id)
-            .query(`
+    const result = await pool.request()
+      .input('id', id)
+      .query(`
                 SELECT *
                 FROM Candidates
                 WHERE Id = @id
             `);
 
-        if (result.recordset.length === 0) {
-            return res.status(404).json({
-                error: 'Candidato não encontrado'
-            });
-        }
-
-        res.json(result.recordset[0]);
-
-    } catch (error) {
-        console.error(error);
-
-        res.status(500).json({
-            error: 'Erro ao buscar candidato'
-        });
+    if (result.recordset.length === 0) {
+      return res.status(404).json({
+        error: 'Candidato não encontrado'
+      });
     }
+
+    res.json(result.recordset[0]);
+
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      error: 'Erro ao buscar candidato'
+    });
+  }
 });
