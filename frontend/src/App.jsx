@@ -1,4 +1,27 @@
+import { useState } from "react"
 function App() {
+
+  const [candidatoSelecionado, setCandidatoSelecionado] = useState(null)
+  const candidatos = [
+    {
+      id: 1,
+      nome: 'Murilo Henrique',
+      email: 'murilo@email.com',
+      area: 'Desenvolvedor',
+      origem: 'PDF',
+      telefone: '(41) 99999-9999',
+      resumo: 'Desenvolvedor com experiência em desenvolvimento web.'
+    },
+    {
+      id: 2,
+      nome: 'João Silva',
+      email: 'joao@email.com',
+      area: 'Full Stack',
+      origem: 'Manual',
+      telefone: '(41) 98888-8888',
+      resumo: 'Profissional com experiência em desenvolvimento Full Stack.'
+    }
+  ]
   return (
     <>
       {/* header */}
@@ -42,22 +65,71 @@ function App() {
             </thead>
 
             <tbody>
-              <tr className="border-t border-gray-700 bg-gray-900">
-                <td className="p-4">Murilo Henrique</td>
-                <td className="p-4">murilo@email.com</td>
-                <td className="p-4">Desenvolvedor</td>
-                <td className="p-4">PDF</td>
-              </tr>
-
-              <tr className="border-t border-gray-700 bg-gray-900">
-                <td className="p-4">João Silva</td>
-                <td className="p-4">joao@email.com</td>
-                <td className="p-4">Full Stack</td>
-                <td className="p-4">Manual</td>
-              </tr>
+              {candidatos.map((candidato) => {
+                return (
+                  <tr key={candidato.id} onClick={() => setCandidatoSelecionado(candidato)} className="border-t border-gray-700 bg-gray-900 hover:bg-gray-800 cursor-pointer">
+                    <td className="p-4">{candidato.nome}</td>
+                    <td className="p-4">{candidato.email}</td>
+                    <td className="p-4">{candidato.area}</td>
+                    <td className="p-4">{candidato.origem}</td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>
+        {candidatoSelecionado && (
+          <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
+            <div className="bg-gray-800 w-full max-w-lg rounded-lg p-6 text-white">
+
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">
+                  Detalhes do candidato
+                </h2>
+
+                <button
+                  onClick={() => setCandidatoSelecionado(null)}
+                  className="text-gray-400 hover:text-white text-xl"
+                >
+                  ✕
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-gray-400">Nome</p>
+                  <p className="font-bold">{candidatoSelecionado.nome}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-400">E-mail</p>
+                  <p>{candidatoSelecionado.email}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-400">Telefone</p>
+                  <p>{candidatoSelecionado.telefone}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-400">Área desejada</p>
+                  <p>{candidatoSelecionado.area}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-400">Origem</p>
+                  <p>{candidatoSelecionado.origem}</p>
+                </div>
+
+                <div>
+                  <p className="text-sm text-gray-400">Resumo profissional</p>
+                  <p>{candidatoSelecionado.resumo}</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        )}
         {/* Fim da tabela de candidatos */}
       </div>
       {/* Fim do header, input e botão de novo cadastro */}
