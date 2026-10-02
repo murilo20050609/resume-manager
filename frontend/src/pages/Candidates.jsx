@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { deleteCandidate } from "../api/candidates"
 import Pagination from "../components/Pagination"
 function Candidates() {
     const [candidateSelected, setCandidateSelected] = useState(null)
@@ -34,6 +35,28 @@ function Candidates() {
     const totalPages = Math.ceil(
         candidatesFilter.length / candidatePage
     )
+    const handleDelete = async (id) => {
+        const confirmed = window.confirm(
+            "Tem certeza que deseja excluir este candidato?"
+        )
+
+        if (!confirmed) {
+            return
+        }
+
+        const response = await deleteCandidate(id)
+
+        if (!response.ok) {
+            alert("Não foi possível excluir o candidato.")
+            return
+        }
+
+        setCandidates(
+            candidates.filter((candidate) => candidate.Id !== id)
+        )
+
+        setCandidateSelected(null)
+    }
     return (
         <div className="w-full min-h-screen bg-gray-900 flex p-4 flex-col">
 
@@ -166,6 +189,18 @@ function Candidates() {
                                     Visualizar PDF
                                 </button>
                             )}
+                            <button
+                                onClick={() => navigate(`/edit-candidate/${candidateSelected.Id}`)}
+                                className="mt-4 ml-2 px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700"
+                            >
+                                Editar
+                            </button>
+                            <button
+                                onClick={() => handleDelete(candidateSelected.Id)}
+                                className="mt-4 ml-2 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+                            >
+                                Excluir
+                            </button>
                         </div>
 
                     </div>

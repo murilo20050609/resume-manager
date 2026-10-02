@@ -16,3 +16,22 @@ export async function createCandidate(candidate) {
         body: JSON.stringify(candidate)
     })
 }
+export async function updateCandidate(id, candidate) {
+    return fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(candidate)
+    })
+}
+
+export async function deleteCandidate(id) {
+    return fetch(`${API_URL}/${id}`, {
+        method: "DELETE"
+    })
+}
+
+export async function getCandidate(id) {
+    return fetch(`${API_URL}/${id}`)
+}

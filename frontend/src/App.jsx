@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom"
 import { Header } from "./components/header"
 import Candidates from "./pages/Candidates"
 import NewCandidate from "./pages/NewCandidates"
+import { EditCandidate } from "./pages/EditCandidate"
 function App() {
   return (
     <>
@@ -9,7 +10,8 @@ function App() {
         <Routes>
           <Route path="/candidates" element={<Candidates />} />
           <Route path="/new-candidate" element={<NewCandidate />} />
-        </Routes>
+          <Route path="/edit-candidate/:id" element={<EditCandidate />} />
+        </Routes>   
     </>
   )
 }
