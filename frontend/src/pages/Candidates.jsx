@@ -148,12 +148,24 @@ function Candidates() {
                                 <p className="text-sm text-gray-400">Origem</p>
                                 <p>{candidateSelected.Origin}</p>
                             </div>
-
                             <div>
                                 <p className="text-sm text-gray-400">Resumo profissional</p>
                                 <p>{candidateSelected.ProfessionalSummary}</p>
                             </div>
 
+                            {candidateSelected.PdfPath && (
+                                <button
+                                    onClick={() =>
+                                        window.open(
+                                            `http://localhost:3000${candidateSelected.PdfPath}`,
+                                            "_blank"
+                                        )
+                                    }
+                                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                                >
+                                    Visualizar PDF
+                                </button>
+                            )}
                         </div>
 
                     </div>

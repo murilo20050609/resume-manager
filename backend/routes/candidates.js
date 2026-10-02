@@ -29,7 +29,8 @@ router.post('/', async (req, res) => {
             phone,
             desiredPosition,
             professionalSummary,
-            origin
+            origin,
+            pdfPath
         } = req.body;
 
         if (!fullName) {
@@ -61,12 +62,13 @@ router.post('/', async (req, res) => {
             .input('desiredPosition', desiredPosition)
             .input('professionalSummary', professionalSummary)
             .input('origin', origin)
+            .input('pdfPath', pdfPath)
             .query(`
-                INSERT INTO Candidates
-               (FullName, Email, Phone, DesiredPosition, ProfessionalSummary, Origin, CreatedAt)
-                VALUES
-               (@fullName, @email, @phone, @desiredPosition, @professionalSummary, @origin, GETDATE())
-            `);
+    INSERT INTO Candidates
+    (FullName, Email, Phone, DesiredPosition, ProfessionalSummary, Origin, PdfPath, CreatedAt)
+    VALUES
+    (@fullName, @email, @phone, @desiredPosition, @professionalSummary, @origin, @pdfPath, GETDATE())
+`)
 
         res.status(201).json({
             message: 'Candidato cadastrado com sucesso'

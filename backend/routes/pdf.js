@@ -1,10 +1,19 @@
 import express from 'express';
 import { PDFParse } from 'pdf-parse';
 import multer from 'multer';
+import { readFile } from 'fs/promises';
 
 const router = express.Router();
 
+const storage = multer.diskStorage({
+    destination: 'uploads/',
+    filename: (req, file, cb) => {
+        cb(null, `${Date.now()}-${file.originalname}`)
+    }
+})
+
 const upload = multer({
+    storage,
     limits: {
         fileSize: 5 * 1024 * 1024
     },
@@ -48,8 +57,10 @@ router.post('/parse-pdf', upload.single('pdf'), async (req, res) => {
             });
         }
 
+        const pdfBuffer = await readFile(req.file.path);
+
         const parser = new PDFParse({
-            data: req.file.buffer
+            data: pdfBuffer
         });
 
         const data = await parser.getText();
@@ -61,7 +72,8 @@ router.post('/parse-pdf', upload.single('pdf'), async (req, res) => {
         res.json({
             message: 'PDF lido com sucesso',
             fileName: req.file.originalname,
-            candidate: candidateData
+            candidate: candidateData,
+            pdfPath: `/uploads/${req.file.filename}`,
         });
     } catch (error) {
         console.error(error);

@@ -17,6 +17,7 @@ BEGIN
         DesiredPosition NVARCHAR(150) NULL,
         ProfessionalSummary NVARCHAR(MAX) NULL,
         Origin NVARCHAR(20) NOT NULL DEFAULT 'Manual',
+        PdfPath NVARCHAR(500) NULL,
         CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME()
     );
 END

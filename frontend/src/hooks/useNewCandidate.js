@@ -13,6 +13,7 @@ export function useNewCandidate() {
     const [messagePdf, setMessagePdf] = useState("")
     const [pdfError, setPdfError] = useState(false)
     const [file, setFile] = useState(null)
+    const [pdfPath, setPdfPath] = useState("")
     const navigate = useNavigate()
     const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
 
@@ -46,6 +47,7 @@ export function useNewCandidate() {
                 return
             }
 
+            setPdfPath(dataPdf.pdfPath)
             if (dataPdf.candidate) {
                 setPdfError(false)
                 setMessagePdf("PDF lido com sucesso.")
@@ -66,7 +68,7 @@ export function useNewCandidate() {
         }
     }
 
-    const origin = file ? "PDF" : "Manual"
+    const origin = pdfPath ? "PDF" : "Manual"
 
     const handleSubmit = async (e) => {
         e.preventDefault()
@@ -81,7 +83,7 @@ export function useNewCandidate() {
             return
         }
 
-        const response = await createCandidate({ ...form, origin })
+        const response = await createCandidate({ ...form, origin, pdfPath })
         const data = await response.json()
 
         console.log(data)
@@ -97,6 +99,7 @@ export function useNewCandidate() {
         pdfError,
         handleFileChange,
         handleSubmit,
-        handleCancel
+        handleCancel,
+        pdfPath
     }
 }
