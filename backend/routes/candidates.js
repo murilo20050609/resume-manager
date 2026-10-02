@@ -28,7 +28,8 @@ router.post('/', async (req, res) => {
             email,
             phone,
             desiredPosition,
-            professionalSummary
+            professionalSummary,
+            origin
         } = req.body;
 
         if (!fullName) {
@@ -59,11 +60,12 @@ router.post('/', async (req, res) => {
             .input('phone', phone)
             .input('desiredPosition', desiredPosition)
             .input('professionalSummary', professionalSummary)
+            .input('origin', origin)
             .query(`
                 INSERT INTO Candidates
-                (FullName, Email, Phone, DesiredPosition, ProfessionalSummary, CreatedAt)
+               (FullName, Email, Phone, DesiredPosition, ProfessionalSummary, Origin, CreatedAt)
                 VALUES
-                (@fullName, @email, @phone, @desiredPosition, @professionalSummary, GETDATE())
+               (@fullName, @email, @phone, @desiredPosition, @professionalSummary, @origin, GETDATE())
             `);
 
         res.status(201).json({

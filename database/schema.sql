@@ -16,6 +16,7 @@ BEGIN
         Phone NVARCHAR(30) NULL,
         DesiredPosition NVARCHAR(150) NULL,
         ProfessionalSummary NVARCHAR(MAX) NULL,
+        Origin NVARCHAR(20) NOT NULL DEFAULT 'Manual',
         CreatedAt DATETIME2 NOT NULL DEFAULT SYSDATETIME()
     );
 END

@@ -61,7 +61,7 @@ function Candidates() {
                                     <td className="p-4">{candidato.FullName}</td>
                                     <td className="p-4">{candidato.Email}</td>
                                     <td className="p-4">{candidato.DesiredPosition}</td>
-                                    <td className="p-4">{candidato.Origem}</td>
+                                    <td className="p-4">{candidato.Origin}</td>
                                 </tr>
                             )
                         })}
@@ -114,7 +114,7 @@ function Candidates() {
 
                             <div>
                                 <p className="text-sm text-gray-400">Origem</p>
-                                <p>{candidatoSelecionado.Origem}</p>
+                                <p>{candidatoSelecionado.Origin}</p>
                             </div>
 
                             <div>
