@@ -2,9 +2,9 @@ import express from 'express';
 import multer from 'multer';
 import candidatesRouter from './routes/candidates.js';
 import pdfRouter from './routes/pdf.js';
-
+import cors from 'cors';
 const app = express();
-
+app.use(cors());
 app.use(express.json());
 
 app.get('/', (req, res) => {

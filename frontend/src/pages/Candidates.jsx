@@ -1,31 +1,18 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 function Candidates() {
     const [candidatoSelecionado, setCandidatoSelecionado] = useState(null)
     const navigate = useNavigate()
+    const [candidatos, setCandidatos] = useState([])
 
-    const candidatos = [
-        {
-            id: 1,
-            nome: 'Murilo Henrique',
-            email: 'murilo@email.com',
-            area: 'Desenvolvedor',
-            origem: 'PDF',
-            telefone: '(41) 99999-9999',
-            resumo: 'Desenvolvedor com experiência em desenvolvimento web.'
-        },
-        {
-            id: 2,
-            nome: 'João Silva',
-            email: 'joao@email.com',
-            area: 'Full Stack',
-            origem: 'Manual',
-            telefone: '(41) 98888-8888',
-            resumo: 'Profissional com experiência em desenvolvimento Full Stack.'
-        }
-    ]
-
+    useEffect(() => {
+        fetch('http://localhost:3000/candidates')
+            .then(response => response.json())
+            .then(data => {
+                setCandidatos(data)
+            })
+    }, [])
     return (
         <div className="w-full min-h-screen bg-gray-900 flex p-4 flex-col">
 
@@ -67,14 +54,14 @@ function Candidates() {
                         {candidatos.map((candidato) => {
                             return (
                                 <tr
-                                    key={candidato.id}
+                                    key={candidato.Id}
                                     onClick={() => setCandidatoSelecionado(candidato)}
                                     className="border-t border-gray-700 bg-gray-900 hover:bg-gray-800 cursor-pointer"
                                 >
-                                    <td className="p-4">{candidato.nome}</td>
-                                    <td className="p-4">{candidato.email}</td>
-                                    <td className="p-4">{candidato.area}</td>
-                                    <td className="p-4">{candidato.origem}</td>
+                                    <td className="p-4">{candidato.FullName}</td>
+                                    <td className="p-4">{candidato.Email}</td>
+                                    <td className="p-4">{candidato.DesiredPosition}</td>
+                                    <td className="p-4">{candidato.Origem}</td>
                                 </tr>
                             )
                         })}
@@ -106,33 +93,33 @@ function Candidates() {
                             <div>
                                 <p className="text-sm text-gray-400">Nome</p>
                                 <p className="font-bold">
-                                    {candidatoSelecionado.nome}
+                                    {candidatoSelecionado.FullName}
                                 </p>
                             </div>
 
                             <div>
                                 <p className="text-sm text-gray-400">E-mail</p>
-                                <p>{candidatoSelecionado.email}</p>
+                                <p>{candidatoSelecionado.Email}</p>
                             </div>
 
                             <div>
                                 <p className="text-sm text-gray-400">Telefone</p>
-                                <p>{candidatoSelecionado.telefone}</p>
+                                <p>{candidatoSelecionado.Phone}</p>
                             </div>
 
                             <div>
                                 <p className="text-sm text-gray-400">Área desejada</p>
-                                <p>{candidatoSelecionado.area}</p>
+                                <p>{candidatoSelecionado.DesiredPosition}</p>
                             </div>
 
                             <div>
                                 <p className="text-sm text-gray-400">Origem</p>
-                                <p>{candidatoSelecionado.origem}</p>
+                                <p>{candidatoSelecionado.Origem}</p>
                             </div>
 
                             <div>
                                 <p className="text-sm text-gray-400">Resumo profissional</p>
-                                <p>{candidatoSelecionado.resumo}</p>
+                                <p>{candidatoSelecionado.ProfessionalSummary}</p>
                             </div>
 
                         </div>
