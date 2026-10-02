@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
         const pool = await poolPromise;
 
         const result = await pool.request().query(
-            'SELECT * FROM Candidates'
+            'SELECT * FROM Candidates ORDER BY CreatedAt DESC'
         );
 
         res.json(result.recordset);

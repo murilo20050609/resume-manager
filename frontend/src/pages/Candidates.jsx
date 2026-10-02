@@ -1,27 +1,39 @@
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-
+import Pagination from "../components/Pagination"
 function Candidates() {
-    const [candidatoSelecionado, setCandidatoSelecionado] = useState(null)
+    const [candidateSelected, setCandidateSelected] = useState(null)
     const navigate = useNavigate()
-    const [candidatos, setCandidatos] = useState([])
+    const [candidates, setCandidates] = useState([])
     const [search, setSearch] = useState('')
+    const [page, setPage] = useState(1)
+    const candidatePage = 10
     useEffect(() => {
         fetch('http://localhost:3000/candidates')
             .then(response => response.json())
             .then(data => {
-                setCandidatos(data)
+                setCandidates(data)
             })
     }, [])
-    const candidatesFilter = candidatos.filter((candidato) => {
-    const term = search.toLowerCase()
+    const candidatesFilter = candidates.filter((candidate) => {
+        const term = search.toLowerCase()
 
-    return (
-        candidato.FullName.toLowerCase().includes(term) ||
-        candidato.Email.toLowerCase().includes(term) ||
-        (candidato.DesiredPosition || "").toLowerCase().includes(term)
+        return (
+            candidate.FullName.toLowerCase().includes(term) ||
+            candidate.Email.toLowerCase().includes(term) ||
+            (candidate.DesiredPosition || "").toLowerCase().includes(term)
+        )
+    })
+    const initialIndex = (page - 1) * candidatePage
+    const finalIndex = initialIndex + candidatePage
+
+    const candidatesOnPage = candidatesFilter.slice(
+        initialIndex,
+        finalIndex
     )
-})
+    const totalPages = Math.ceil(
+        candidatesFilter.length / candidatePage
+    )
     return (
         <div className="w-full min-h-screen bg-gray-900 flex p-4 flex-col">
 
@@ -58,30 +70,39 @@ function Candidates() {
                             <th className="p-4">E-mail</th>
                             <th className="p-4">Área</th>
                             <th className="p-4">Origem</th>
+                            <th className="p-4">Data de Criação</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        {candidatesFilter.map((candidato) => {
+                        {candidatesOnPage.map((candidate) => {
                             return (
                                 <tr
-                                    key={candidato.Id}
-                                    onClick={() => setCandidatoSelecionado(candidato)}
+                                    key={candidate.Id}
+                                    onClick={() => setCandidateSelected(candidate)}
                                     className="border-t border-gray-700 bg-gray-900 hover:bg-gray-800 cursor-pointer"
                                 >
-                                    <td className="p-4">{candidato.FullName}</td>
-                                    <td className="p-4">{candidato.Email}</td>
-                                    <td className="p-4">{candidato.DesiredPosition}</td>
-                                    <td className="p-4">{candidato.Origin}</td>
+                                    <td className="p-4">{candidate.FullName}</td>
+                                    <td className="p-4">{candidate.Email}</td>
+                                    <td className="p-4">{candidate.DesiredPosition}</td>
+                                    <td className="p-4">{candidate.Origin}</td>
+                                    <td className="p-4">{new Date(candidate.CreatedAt).toLocaleDateString()}</td>
                                 </tr>
                             )
                         })}
                     </tbody>
 
                 </table>
-            </div>
 
-            {candidatoSelecionado && (
+            </div>
+            <Pagination
+                page={page}
+                totalPage={totalPages}
+                onPreviousPage={() => setPage(page - 1)}
+                onNextPage={() => setPage(page + 1)}
+            />
+
+            {candidateSelected && (
                 <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
 
                     <div className="bg-gray-800 w-full max-w-lg rounded-lg p-6 text-white">
@@ -92,7 +113,7 @@ function Candidates() {
                             </h2>
 
                             <button
-                                onClick={() => setCandidatoSelecionado(null)}
+                                onClick={() => setCandidateSelected(null)}
                                 className="text-gray-400 hover:text-white text-xl"
                             >
                                 ✕
@@ -104,33 +125,33 @@ function Candidates() {
                             <div>
                                 <p className="text-sm text-gray-400">Nome</p>
                                 <p className="font-bold">
-                                    {candidatoSelecionado.FullName}
+                                    {candidateSelected.FullName}
                                 </p>
                             </div>
 
                             <div>
                                 <p className="text-sm text-gray-400">E-mail</p>
-                                <p>{candidatoSelecionado.Email}</p>
+                                <p>{candidateSelected.Email}</p>
                             </div>
 
                             <div>
                                 <p className="text-sm text-gray-400">Telefone</p>
-                                <p>{candidatoSelecionado.Phone}</p>
+                                <p>{candidateSelected.Phone}</p>
                             </div>
 
                             <div>
                                 <p className="text-sm text-gray-400">Área desejada</p>
-                                <p>{candidatoSelecionado.DesiredPosition}</p>
+                                <p>{candidateSelected.DesiredPosition}</p>
                             </div>
 
                             <div>
                                 <p className="text-sm text-gray-400">Origem</p>
-                                <p>{candidatoSelecionado.Origin}</p>
+                                <p>{candidateSelected.Origin}</p>
                             </div>
 
                             <div>
                                 <p className="text-sm text-gray-400">Resumo profissional</p>
-                                <p>{candidatoSelecionado.ProfessionalSummary}</p>
+                                <p>{candidateSelected.ProfessionalSummary}</p>
                             </div>
 
                         </div>
