@@ -5,7 +5,7 @@ function Candidates() {
     const [candidatoSelecionado, setCandidatoSelecionado] = useState(null)
     const navigate = useNavigate()
     const [candidatos, setCandidatos] = useState([])
-
+    const [search, setSearch] = useState('')
     useEffect(() => {
         fetch('http://localhost:3000/candidates')
             .then(response => response.json())
@@ -13,6 +13,15 @@ function Candidates() {
                 setCandidatos(data)
             })
     }, [])
+    const candidatesFilter = candidatos.filter((candidato) => {
+    const term = search.toLowerCase()
+
+    return (
+        candidato.FullName.toLowerCase().includes(term) ||
+        candidato.Email.toLowerCase().includes(term) ||
+        (candidato.DesiredPosition || "").toLowerCase().includes(term)
+    )
+})
     return (
         <div className="w-full min-h-screen bg-gray-900 flex p-4 flex-col">
 
@@ -24,6 +33,8 @@ function Candidates() {
 
             <div className="flex flex-row gap-4 items-center justify-start mt-4">
                 <input
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
                     placeholder="Busca por nome, email ou área"
                     className="w-full p-2 bg-gray-800 text-white placeholder:text-gray-500 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
@@ -51,7 +62,7 @@ function Candidates() {
                     </thead>
 
                     <tbody>
-                        {candidatos.map((candidato) => {
+                        {candidatesFilter.map((candidato) => {
                             return (
                                 <tr
                                     key={candidato.Id}
