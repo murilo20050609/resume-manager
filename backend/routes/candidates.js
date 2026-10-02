@@ -52,6 +52,17 @@ router.post('/', async (req, res) => {
                 error: 'o e-mail informado é inválido'
             });
         }
+        if (!desiredPosition) {
+            return res.status(400).json({
+                error: 'o campo desiredPosition é obrigatório'
+            });
+        }
+
+        if (!professionalSummary) {
+            return res.status(400).json({
+                error: 'o campo professionalSummary é obrigatório'
+            });
+        }
 
         const pool = await poolPromise;
 
@@ -133,6 +144,17 @@ router.put('/:id', async (req, res) => {
         if (!email) {
             return res.status(400).json({
                 error: 'o campo email é obrigatório'
+            });
+        }
+        if (!desiredPosition) {
+            return res.status(400).json({
+                error: 'o campo desiredPosition é obrigatório'
+            });
+        }
+
+        if (!professionalSummary) {
+            return res.status(400).json({
+                error: 'o campo professionalSummary é obrigatório'
             });
         }
 

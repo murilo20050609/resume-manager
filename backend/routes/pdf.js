@@ -40,12 +40,40 @@ function extractCandidateData(text) {
 
     const fullName = lines[0] || '';
 
+    const experienceMatch = text.match(
+        /EXPERIÊNCIA PROFISSIONAL\s+([\s\S]*?)(?=CURSOS E APRIMORAMENTOS|HABILIDADES|$)/i
+    )
+
+    const experienceText = experienceMatch
+        ? experienceMatch[1].trim()
+        : ''
+
+    const firstPositionMatch = experienceText.match(
+        /^(.+?)\s+\|\s+/m
+    )
+
+    const desiredPosition = firstPositionMatch
+        ? firstPositionMatch[1].trim()
+        : ''
+
+    const skillsMatch = text.match(
+        /HABILIDADES\s+([\s\S]*)$/i
+    )
+
+    const skills = skillsMatch
+        ? skillsMatch[1].trim()
+        : ''
+
+    const professionalSummary = experienceText
+        ? `${experienceText.split('\n').slice(0, 4).join(' ')}${skills ? ` Habilidades: ${skills}` : ''}`
+        : ''
+
     return {
         fullName,
         email: emailMatch ? emailMatch[0] : '',
         phone: phoneMatch ? phoneMatch[0] : '',
-        desiredPosition: '',
-        professionalSummary: ''
+        desiredPosition,
+        professionalSummary
     };
 }
 

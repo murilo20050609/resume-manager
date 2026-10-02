@@ -1,4 +1,4 @@
-function CandidateForm({ form, setForm, onSubmit, onCancel }) {
+function CandidateForm({ form, setForm, onSubmit, onCancel, errors }) {
     return (
         <div>
             <div className="bg-gray-800 p-4 rounded-md border border-gray-700">
@@ -12,6 +12,9 @@ function CandidateForm({ form, setForm, onSubmit, onCancel }) {
                             type="text"
                             className="w-full mt-2 p-2 rounded-md bg-gray-900 text-white border border-gray-700"
                         />
+                        {errors.fullName && (
+                            <p className="mt-1 text-sm text-red-400">{errors.fullName}</p>
+                        )}
                     </div>
                     <div>
                         <label className="block text-white">E-mail *</label>
@@ -21,12 +24,20 @@ function CandidateForm({ form, setForm, onSubmit, onCancel }) {
                             type="email"
                             className="w-full mt-2 p-2 rounded-md bg-gray-900 text-white border border-gray-700"
                         />
+                        {errors.email && (
+                            <p className="mt-1 text-sm text-red-400">{errors.email}</p>
+                        )}
                     </div>
                     <div>
                         <label className="block text-white">Telefone</label>
                         <input
                             value={form.phone}
-                            onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                            onChange={(e) =>
+                                setForm({
+                                    ...form,
+                                    phone: e.target.value.replace(/\D/g, "")
+                                })
+                            }
                             type="tel"
                             className="w-full mt-2 p-2 rounded-md bg-gray-900 text-white border border-gray-700"
                         />
@@ -39,6 +50,9 @@ function CandidateForm({ form, setForm, onSubmit, onCancel }) {
                             type="text"
                             className="w-full mt-2 p-2 rounded-md bg-gray-900 text-white border border-gray-700"
                         />
+                        {errors.desiredPosition && (
+                            <p className="mt-1 text-sm text-red-400">{errors.desiredPosition}</p>
+                        )}
                     </div>
                     <div>
                         <label className="block text-white">Resumo profissional</label>
@@ -48,6 +62,9 @@ function CandidateForm({ form, setForm, onSubmit, onCancel }) {
                             className="w-full mt-2 p-2 rounded-md bg-gray-900 text-white border border-gray-700"
                             rows="4"
                         />
+                        {errors.professionalSummary && (
+                            <p className="mt-1 text-sm text-red-400">{errors.professionalSummary}</p>
+                        )}
                     </div>
                     <div className="mt-6 flex justify-start">
                         <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">

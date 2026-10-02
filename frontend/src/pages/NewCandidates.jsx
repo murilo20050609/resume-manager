@@ -11,7 +11,8 @@ function NewCandidate() {
         pdfError,
         handleFileChange,
         handleSubmit,
-        handleCancel
+        handleCancel,
+        errors
     } = useNewCandidate()
 
     return (
@@ -29,6 +30,7 @@ function NewCandidate() {
                 setForm={setForm}
                 onSubmit={handleSubmit}
                 onCancel={handleCancel}
+                errors={errors}
             />
         </Background>
     )

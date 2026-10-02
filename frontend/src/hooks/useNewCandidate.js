@@ -16,6 +16,7 @@ export function useNewCandidate() {
     const [pdfPath, setPdfPath] = useState("")
     const navigate = useNavigate()
     const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
+    const [errors, setErrors] = useState({})
 
     const handleFileChange = async (e) => {
         const selectedFile = e.target.files[0]
@@ -73,20 +74,36 @@ export function useNewCandidate() {
     const handleSubmit = async (e) => {
         e.preventDefault()
 
-        if (!form.fullName.trim() || !form.email.trim()) {
-            alert("Por favor, preencha os campos obrigatórios.")
-            return
+        const newErrors = {}
+
+        if (!form.fullName.trim()) {
+            newErrors.fullName = "Informe o nome completo."
         }
 
-        if (!validEmail) {
-            alert("Por favor, insira um e-mail válido.")
+        if (!form.email.trim()) {
+            newErrors.email = "Informe o e-mail."
+        } else if (!validEmail) {
+            newErrors.email = "Informe um e-mail válido."
+        }
+
+        if (!form.desiredPosition.trim()) {
+            newErrors.desiredPosition = "Informe a área desejada."
+        }
+
+        if (!form.professionalSummary.trim()) {
+            newErrors.professionalSummary = "Informe o resumo profissional."
+        }
+
+        setErrors(newErrors)
+
+        if (Object.keys(newErrors).length > 0) {
             return
         }
 
         const response = await createCandidate({ ...form, origin, pdfPath })
         const data = await response.json()
-
         console.log(data)
+
         navigate("/candidates")
     }
 
@@ -100,6 +117,7 @@ export function useNewCandidate() {
         handleFileChange,
         handleSubmit,
         handleCancel,
-        pdfPath
+        pdfPath,
+        errors
     }
 }
