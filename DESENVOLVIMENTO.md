@@ -270,7 +270,7 @@ A IA foi utilizada como ferramenta de apoio durante o desenvolvimento, principal
 
 Durante o desenvolvimento, algumas partes da implementação precisaram ser ajustadas após testes e revisão dos requisitos.
 
-Um dos principais ajustes foi nas validações do cadastro. Inicialmente, área ou cargo de interesse e resumo profissional estavam sendo tratados como obrigatórios. Depois de revisar o enunciado do teste, a implementação foi alterada para que somente nome e e-mail fossem obrigatórios no cadastro manual.
+Um dos principais ajustes foi nas validações do cadastro e da edição. Inicialmente, área ou cargo de interesse e resumo profissional estavam sendo tratados como obrigatórios. Depois de revisar o enunciado do teste, a implementação foi ajustada para que somente nome e e-mail sejam obrigatórios nos dois fluxos.
 
 Também foram realizados ajustes no tratamento de erros do front-end. Durante os testes, foi verificado o comportamento da aplicação quando o back-end ou o banco de dados não estavam disponíveis. A partir disso, foram adicionadas mensagens para informar o usuário quando não fosse possível realizar a comunicação com o servidor.
 

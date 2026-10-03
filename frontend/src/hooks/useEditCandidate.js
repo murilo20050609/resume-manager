@@ -48,14 +48,6 @@ export function useEditCandidate() {
         newErrors.email = "Informe um e-mail válido."
     }
 
-    if (!form.desiredPosition.trim()) {
-        newErrors.desiredPosition = "Informe a área desejada."
-    }
-
-    if (!form.professionalSummary.trim()) {
-        newErrors.professionalSummary = "Informe o resumo profissional."
-    }
-
     setErrors(newErrors)
 
     if (Object.keys(newErrors).length > 0) {

@@ -245,7 +245,7 @@ O cadastro (`POST /candidates`) recebe JSON com `fullName` e `email` obrigatóri
 
 O processamento do PDF espera um arquivo no campo `pdf` de uma requisição `multipart/form-data`. A resposta inclui os dados identificados em `candidate` e o caminho do arquivo em `pdfPath`. Erros de validação do arquivo retornam HTTP `400`; erros de leitura retornam HTTP `500`.
 
-Na edição (`PUT /candidates/:id`), a implementação atual do back-end exige também `desiredPosition` e `professionalSummary`, embora esses campos sejam opcionais no cadastro. Para salvar uma edição, preencha-os.
+Na edição (`PUT /candidates/:id`), somente `fullName` e `email` são obrigatórios. `phone`, `desiredPosition` e `professionalSummary` podem ficar vazios.
 
 ## Validações
 

@@ -135,18 +135,6 @@ router.put('/:id', async (req, res) => {
                 error: 'o campo email é obrigatório'
             });
         }
-        if (!desiredPosition) {
-            return res.status(400).json({
-                error: 'o campo desiredPosition é obrigatório'
-            });
-        }
-
-        if (!professionalSummary) {
-            return res.status(400).json({
-                error: 'o campo professionalSummary é obrigatório'
-            });
-        }
-
         const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
         if (!emailValido) {

@@ -12,7 +12,7 @@ export function useNewCandidate() {
     })
     const [messagePdf, setMessagePdf] = useState("")
     const [pdfError, setPdfError] = useState(false)
-    const [file, setFile] = useState(null)
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
     const [pdfPath, setPdfPath] = useState("")
     const navigate = useNavigate()
     const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)
@@ -30,8 +30,6 @@ export function useNewCandidate() {
             setMessagePdf("O arquivo PDF deve ter no máximo 5 MB.")
             return
         }
-
-        setFile(selectedFile)
 
         try {
             const formData = new FormData()
@@ -102,7 +100,7 @@ export function useNewCandidate() {
                 return
             }
 
-            navigate("/candidates")
+            setIsSuccessModalOpen(true)
         } catch (error) {
             console.error(error)
             alert("Não foi possível conectar ao servidor.")
@@ -110,6 +108,7 @@ export function useNewCandidate() {
     }
 
     const handleCancel = () => navigate("/candidates")
+    const handleSuccessConfirm = () => navigate("/candidates")
 
     return {
         form,
@@ -119,6 +118,8 @@ export function useNewCandidate() {
         handleFileChange,
         handleSubmit,
         handleCancel,
+        handleSuccessConfirm,
+        isSuccessModalOpen,
         pdfPath,
         errors
     }
