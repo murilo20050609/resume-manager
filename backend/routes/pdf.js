@@ -26,7 +26,82 @@ const upload = multer({
     }
 });
 
-function extractCandidateData(text) {
+const NAME_PARTICLES = new Set(['da', 'das', 'de', 'do', 'dos', 'e']);
+const NON_NAME_KEYWORDS = /\b(curr[ií]culo|curriculum|resume|vitae|candidato|contato|resumo|experi[eê]ncia|forma[cç][aã]o|habilidades|objetivo|perfil|desenvolvedor|desenvolvedora|developer|engenheiro|engenheira|analista|gerente|especialista|consultor|consultora|estagi[aá]rio|estagi[aá]ria|tecnologia|n[ií]vel)\b/i;
+
+function normalizeNameCandidate(line) {
+    const candidate = line
+        .trim()
+        .replace(/^\d+[.)]\s*/u, '')
+        .replace(/^[•·▪◦*-]\s*/u, '')
+        .split(/\s+\|\s+/u, 1)[0]
+        .replace(/^(?:nome(?:\s+completo)?|candidato(?:a)?)\s*[:\-]\s*/iu, '')
+        .replace(/^(?:curr[ií]culo(?:\s+vitae)?|curriculum(?:\s+vitae)?|resume|cv)\s+(?:de\s+)?/iu, '')
+        .replace(/\s+[–—-]\s+.*$/u, '')
+        .trim()
+        .replace(/[.,;:]+$/u, '');
+
+    if (!candidate || /[@\d\/:()[\]]/u.test(candidate) || NON_NAME_KEYWORDS.test(candidate)) {
+        return '';
+    }
+
+    const words = candidate.match(/[\p{L}]+(?:['’-][\p{L}]+)*/gu) || [];
+    const isNameLike = words.length >= 2 &&
+        words.length <= 6 &&
+        words.filter(word => !NAME_PARTICLES.has(word.toLowerCase())).length >= 2 &&
+        words.every(word =>
+            NAME_PARTICLES.has(word.toLowerCase()) ||
+            word === word.toUpperCase() ||
+            /^[\p{Lu}][\p{Ll}]/u.test(word)
+        ) &&
+        /^[\p{L}\s'’-]+$/u.test(candidate);
+
+    return isNameLike ? candidate : '';
+}
+
+function findCandidateName(lines) {
+    const contactIndex = lines.findIndex(line =>
+        /[^\s@]+@[^\s@]+\.[^\s@]+/.test(line) ||
+        /(?:\(?\d{2}\)?\s?)?(?:9?\d{4})[-\s]?\d{4}/.test(line)
+    );
+
+    const candidates = lines
+        .map((line, index) => ({
+            name: normalizeNameCandidate(line),
+            index
+        }))
+        .filter(candidate => candidate.name);
+
+    if (candidates.length === 0) {
+        return '';
+    }
+
+    if (contactIndex === -1) {
+        return candidates[0].name;
+    }
+
+    candidates.sort((first, second) => {
+        const firstDistance = Math.abs(first.index - contactIndex);
+        const secondDistance = Math.abs(second.index - contactIndex);
+
+        if (firstDistance !== secondDistance) {
+            return firstDistance - secondDistance;
+        }
+
+        const firstIsBeforeContact = first.index < contactIndex;
+        const secondIsBeforeContact = second.index < contactIndex;
+
+        if (firstIsBeforeContact !== secondIsBeforeContact) {
+            return firstIsBeforeContact ? -1 : 1;
+        }
+
+        return first.index - second.index;
+    });
+
+    return candidates[0].name;
+}
+
+export function extractCandidateData(text) {
     const emailMatch = text.match(/[^\s@]+@[^\s@]+\.[^\s@]+/);
 
     const phoneMatch = text.match(
@@ -38,7 +113,7 @@ function extractCandidateData(text) {
         .map(line => line.trim())
         .filter(line => line.length > 0);
 
-    const fullName = lines[0] || '';
+    const fullName = findCandidateName(lines);
 
     const experienceMatch = text.match(
         /EXPERIÊNCIA PROFISSIONAL\s+([\s\S]*?)(?=CURSOS E APRIMORAMENTOS|HABILIDADES|$)/i

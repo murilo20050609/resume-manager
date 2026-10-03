@@ -15,6 +15,7 @@ export function useEditCandidate() {
     })
 
     const [errors, setErrors] = useState({})
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false)
 
     useEffect(() => {
         async function loadCandidate() {
@@ -34,38 +35,42 @@ export function useEditCandidate() {
     }, [id])
 
     const handleSubmit = async (e) => {
-    e.preventDefault()
+        e.preventDefault()
 
-    const newErrors = {}
+        const newErrors = {}
 
-    if (!form.fullName.trim()) {
-        newErrors.fullName = "Informe o nome completo."
+        if (!form.fullName.trim()) {
+            newErrors.fullName = "Informe o nome completo."
+        }
+
+        if (!form.email.trim()) {
+            newErrors.email = "Informe o e-mail."
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
+            newErrors.email = "Informe um e-mail válido."
+        }
+
+        setErrors(newErrors)
+
+        if (Object.keys(newErrors).length > 0) {
+            return
+        }
+
+        const response = await updateCandidate(id, form)
+
+        if (!response.ok) {
+            const data = await response.json()
+            console.error(data)
+            return
+        }
+
+        setIsSuccessModalOpen(true)
     }
-
-    if (!form.email.trim()) {
-        newErrors.email = "Informe o e-mail."
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
-        newErrors.email = "Informe um e-mail válido."
-    }
-
-    setErrors(newErrors)
-
-    if (Object.keys(newErrors).length > 0) {
-        return
-    }
-
-    const response = await updateCandidate(id, form)
-
-    if (!response.ok) {
-        const data = await response.json()
-        console.error(data)
-        return
-    }
-
-    navigate("/candidates")
-}
 
     const handleCancel = () => {
+        navigate("/candidates")
+    }
+
+    const handleSuccessConfirm = () => {
         navigate("/candidates")
     }
 
@@ -74,6 +79,8 @@ export function useEditCandidate() {
         setForm,
         errors,
         handleSubmit,
-        handleCancel
+        handleCancel,
+        handleSuccessConfirm,
+        isSuccessModalOpen
     }
-}   
+}

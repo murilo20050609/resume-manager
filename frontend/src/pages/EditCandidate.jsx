@@ -1,5 +1,6 @@
 import Background from "../components/background"
 import CandidateForm from "../components/CandidateForm"
+import SuccessModal from "../components/SuccessModal"
 import { useEditCandidate } from "../hooks/useEditCandidate"
 
 export function EditCandidate() {
@@ -9,6 +10,8 @@ export function EditCandidate() {
         errors,
         handleCancel,
         handleSubmit,
+        handleSuccessConfirm,
+        isSuccessModalOpen
     } = useEditCandidate()
 
     return (
@@ -26,6 +29,14 @@ export function EditCandidate() {
                     errors={errors}
                 />
             </div>
+            {isSuccessModalOpen && (
+                <SuccessModal
+                    title="Alterações salvas com sucesso"
+                    message="Os dados do candidato foram atualizados."
+                    buttonLabel="Ver candidatos"
+                    onConfirm={handleSuccessConfirm}
+                />
+            )}
         </Background>
     )
 }

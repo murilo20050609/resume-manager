@@ -35,3 +35,7 @@ export async function deleteCandidate(id) {
 export async function getCandidate(id) {
     return fetch(`${API_URL}/${id}`)
 }
+
+export async function getCandidates() {
+    return fetch(API_URL)
+}

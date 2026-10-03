@@ -318,7 +318,7 @@ Currículos digitalizados, PDFs compostos por imagens ou documentos com estrutur
 
 Por esse motivo, os dados extraídos sempre são apresentados no formulário antes do cadastro, permitindo que o usuário faça as correções necessárias.
 
-As regras de extração procuram o nome na primeira linha não vazia, e-mail e telefone por expressões regulares, além de seções com títulos específicos para área/cargo e resumo. Mudanças nos títulos ou na organização do currículo podem resultar em campos vazios ou identificações incorretas.
+O nome é identificado por heurísticas que procuram uma linha com aparência de nome próprio, dando preferência a linhas próximas ao e-mail ou telefone. E-mail e telefone são identificados por expressões regulares, e área/cargo e resumo dependem de seções com títulos específicos. Como o formato dos currículos varia, a extração ainda pode retornar campos vazios ou incorretos; confira os dados preenchidos antes de salvar.
 
 O repositório inclui um PDF de exemplo com dados fictícios em `curriculo-teste/Currículo Fictício.pdf`. Use-o para testar o fluxo de cadastro por PDF. Confirme também que nenhum currículo real ou dado pessoal foi versionado em `backend/uploads/`.
 

@@ -214,7 +214,7 @@ O upload é realizado utilizando o Multer, com limite de 5 MB e validação para
 
 Depois que o arquivo é recebido, ele é salvo na pasta `backend/uploads/` e seu conteúdo é lido utilizando a biblioteca `pdf-parse`.
 
-Após a leitura do texto, foram criadas algumas regras para tentar identificar informações como:
+Após a leitura do texto, foram criadas regras heurísticas para tentar identificar informações como:
 
 * nome;
 * e-mail;
@@ -230,7 +230,7 @@ Quando o cadastro é realizado através de um PDF, a origem do registro é armaz
 
 O PDF pode posteriormente ser visualizado através dos detalhes do candidato.
 
-A extração foi desenvolvida utilizando regras simples baseadas no texto do currículo. Por isso, ela não garante a identificação correta das informações em todos os formatos de PDF. Essa limitação foi considerada no desenvolvimento, mantendo a possibilidade de correção manual antes do cadastro.
+Para identificar o nome, a lógica procura linhas com aparência de nome próprio e dá preferência às que aparecem próximas do e-mail ou telefone. Essa abordagem evita depender exclusivamente da primeira linha do PDF, que pode conter um título ou outra informação. Ainda assim, como os currículos variam de formato, a extração não garante a identificação correta em todos os documentos. O usuário pode revisar e corrigir os dados antes do cadastro.
 
 Caso o PDF seja inválido, ultrapasse o limite de 5 MB ou ocorra algum problema durante a leitura, o sistema apresenta uma mensagem de erro. O cadastro manual continua disponível independentemente do processamento do PDF.
 
@@ -256,9 +256,9 @@ O uso foi maior no back-end, principalmente por eu estar estudando Node.js e Exp
 
 Durante esse processo, também foram indicados sites, documentações e vídeos para complementar os estudos, principalmente quando era necessário entender melhor algum conceito antes de aplicá-lo no projeto.
 
-Também utilizei a IA para auxiliar na implementação de algumas partes do código, revisar soluções, analisar erros e organizar a documentação.
+Também utilizei a IA para auxiliar na implementação de algumas partes do código, revisar soluções, analisar erros e organizar a documentação. Mais recentemente, busquei apoio especificamente para melhorar a identificação do nome durante a leitura do PDF. A sugestão foi substituir a dependência da primeira linha por uma heurística que procura linhas com aparência de nome próprio e considera a proximidade com informações de contato, como e-mail e telefone.
 
-As sugestões recebidas foram analisadas e adaptadas conforme a necessidade do projeto. Também realizei testes durante o desenvolvimento para verificar se o código funcionava e se estava de acordo com os requisitos do teste.
+As sugestões recebidas foram analisadas e adaptadas conforme a necessidade do projeto. A heurística para o nome foi testada com o currículo fictício incluído no repositório e com outros exemplos de linhas, incluindo casos sem um nome identificável. Também realizei testes durante o desenvolvimento para verificar se o código funcionava e se estava de acordo com os requisitos do teste.
 
 Um exemplo foi a validação dos campos do cadastro. Inicialmente, alguns campos estavam sendo tratados como obrigatórios, mas durante a revisão dos requisitos percebi que somente nome e e-mail deveriam ser obrigatórios. A implementação foi ajustada para seguir essa regra.
 
@@ -330,6 +330,8 @@ Na interface, poderiam ser adicionadas opções para alterar o idioma da aplica�
 A busca e os filtros da listagem também poderiam ser aprimorados, permitindo realizar filtros mais específicos e combinar diferentes critérios de pesquisa.
 
 Outra melhoria seria revisar a organização do código, buscando separar melhor algumas responsabilidades e facilitar a manutenção e evolução do projeto.
+
+Atualmente, ao acessar a rota inicial (`/`), a aplicação redireciona para a listagem de candidatos (`/candidates`). Como evolução futura, essa entrada poderia apresentar uma tela de login antes de permitir o acesso às funcionalidades do sistema.
 
 Essas melhorias não foram priorizadas durante o desafio porque o objetivo principal foi entregar uma solução simples, funcional e alinhada aos requisitos solicitados.
 
