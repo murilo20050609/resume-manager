@@ -86,13 +86,6 @@ export function useNewCandidate() {
             newErrors.email = "Informe um e-mail válido."
         }
 
-        if (!form.desiredPosition.trim()) {
-            newErrors.desiredPosition = "Informe a área desejada."
-        }
-
-        if (!form.professionalSummary.trim()) {
-            newErrors.professionalSummary = "Informe o resumo profissional."
-        }
 
         setErrors(newErrors)
 
@@ -100,11 +93,20 @@ export function useNewCandidate() {
             return
         }
 
-        const response = await createCandidate({ ...form, origin, pdfPath })
-        const data = await response.json()
-        console.log(data)
+        try {
+            const response = await createCandidate({ ...form, origin, pdfPath })
+            const data = await response.json()
 
-        navigate("/candidates")
+            if (!response.ok) {
+                alert(data.error || "Não foi possível cadastrar o candidato.")
+                return
+            }
+
+            navigate("/candidates")
+        } catch (error) {
+            console.error(error)
+            alert("Não foi possível conectar ao servidor.")
+        }
     }
 
     const handleCancel = () => navigate("/candidates")
