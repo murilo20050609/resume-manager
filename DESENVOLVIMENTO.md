@@ -337,7 +337,7 @@ Essas melhorias não foram priorizadas durante o desafio porque o objetivo princ
 
 ## 12. Tempo aproximado de desenvolvimento
 
-O desenvolvimento foi iniciado no dia 30/09 e finalizado no dia 02/10.
+O desenvolvimento foi iniciado no dia 30/09 e finalizado no dia 03/10.
 
 Considerando o tempo utilizado para desenvolvimento, configuração do ambiente, estudos, testes, correções e documentação, o tempo total dedicado ao desafio foi de aproximadamente 15 horas.
 
